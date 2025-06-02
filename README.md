@@ -1,50 +1,103 @@
-# Welcome to your Expo app 👋
+# CreatorFocus
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A powerful platform for content creators to streamline their workflow, organize content, and generate fresh ideas with AI.
 
-## Get started
+## Features
 
-1. Install dependencies
+- Smart Task Management
+- Content Calendar
+- AI-Powered Content Ideas
+- Analytics Dashboard
+- Cross-Platform Integration
+- Collaboration Tools
 
-   ```bash
-   npm install
-   ```
+## Tech Stack
 
-2. Start the app
+- React Native / Expo
+- TypeScript
+- PostgreSQL
+- OpenAI
+- Express.js
+- Styled Components
 
-   ```bash
-   npx expo start
-   ```
+## Prerequisites
 
-In the output, you'll find options to open the app in a
+- Node.js (v18 or later)
+- PostgreSQL (v14 or later)
+- OpenAI API Key
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Environment Variables
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Create a `.env` file in the root directory with the following variables:
 
-## Get a fresh project
+```env
+# Database
+DB_USER=your_db_user
+DB_PASSWORD=your_db_password
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=creatorfocus
 
-When you're ready, run:
-
-```bash
-npm run reset-project
+# OpenAI
+OPENAI_API_KEY=your_openai_api_key
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Installation
 
-## Learn more
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/creatorfocus.git
+cd creatorfocus
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+2. Install dependencies:
+```bash
+npm install
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+3. Initialize the database:
+```bash
+npm run db:init
+```
 
-## Join the community
+## Running the Application
 
-Join our community of developers creating universal apps.
+1. Start the backend development server:
+```bash
+npm run backend:dev
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+2. Start the Expo development server:
+```bash
+npm start
+```
+
+3. Run on your preferred platform:
+```bash
+# iOS
+npm run ios
+
+# Android
+npm run android
+
+# Web
+npm run web
+```
+
+## Development
+
+- The frontend code is in the `app` directory
+- The backend code is in the `backend` directory
+- Database migrations are in `backend/scripts`
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

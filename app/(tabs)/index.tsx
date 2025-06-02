@@ -1,75 +1,77 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function LandingScreen() {
+  const router = useRouter();
 
-export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <LinearGradient colors={['#0f0c29', '#302b63', '#24243e']} style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.content}>
+          <Text style={styles.logo}>🎬 CreatorFocus</Text>
+          <Text style={styles.subtitle}>Stay organized. Stay consistent. Create smarter.</Text>
+
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={() => router.push('/home')}
+          >
+            <Text style={styles.buttonText}>Enter Without Login</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => alert('Login functionality coming soon!')}
+          >
+            <Text style={styles.secondaryText}>Login / Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+    padding: 24,
+    justifyContent: 'center',
+  },
+  content: {
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  logo: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 12,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  subtitle: {
+    fontSize: 16,
+    color: '#ddd',
+    textAlign: 'center',
+    marginBottom: 40,
+  },
+  primaryButton: {
+    backgroundColor: '#4F46E5',
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  secondaryButton: {
+    padding: 10,
+  },
+  secondaryText: {
+    color: '#a3a3a3',
+    fontSize: 14,
   },
 });
