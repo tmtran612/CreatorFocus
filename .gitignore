@@ -58,3 +58,16 @@ yarn-error.*
 # Misc
 .DS_Store
 Thumbs.db
+
+# AWS & Infrastructure
+.aws/
+cdk.out/
+.cdk.staging/
+cdk.context.json
+
+# Misc
+*.swp
+*.swo
+
+# Misc
+coverage/
