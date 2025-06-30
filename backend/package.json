@@ -3,16 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "build": "tsc",
     "watch": "tsc -w"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.0.0",
-    "@types/aws-lambda": "^8.10.0"
+    "@types/aws-lambda": "^8.10.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/pg": "^8.15.4",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "typescript": "~5.0.0",
-    "esbuild": "~0.19.0"
+    "esbuild": "~0.19.0",
+    "typescript": "~5.0.0"
   }
 }
