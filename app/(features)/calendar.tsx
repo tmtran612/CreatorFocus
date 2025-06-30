@@ -1,97 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView, View } from 'react-native';
-import styled from 'styled-components/native';
-
-const Container = styled.View`
-  flex: 1;
-  background-color: #18181B;
-  padding: 24px;
-`;
-
-const Title = styled.Text`
-  font-size: 32px;
-  color: #E4E4E7;
-  margin-bottom: 24px;
-`;
-
-const CalendarGrid = styled.View`
-  margin-bottom: 32px;
-`;
-
-const WeekRow = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  margin-bottom: 8px;
-`;
-
-const DayCell = styled.TouchableOpacity<{ isSelected?: boolean }>`
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  justify-content: center;
-  align-items: center;
-  background-color: ${props => props.isSelected ? '#71717A' : 'transparent'};
-`;
-
-const DayText = styled.Text<{ isToday?: boolean }>`
-  color: ${props => props.isToday ? '#10B981' : '#E4E4E7'};
-  font-size: 16px;
-`;
-
-const ContentCard = styled.View`
-  background-color: rgba(39, 39, 42, 0.8);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  border-width: 1px;
-  border-color: rgba(63, 63, 70, 0.5);
-`;
-
-const ContentTitle = styled.Text`
-  color: #E4E4E7;
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
-`;
-
-const ContentDetails = styled.Text`
-  color: #A1A1AA;
-  font-size: 14px;
-`;
-
-const AddButton = styled.TouchableOpacity`
-  background-color: rgba(63, 63, 70, 0.5);
-  border-radius: 8px;
-  padding: 12px;
-  align-items: center;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: 16px;
-`;
-
-const AddButtonText = styled.Text`
-  color: #E4E4E7;
-  font-size: 16px;
-  margin-left: 8px;
-`;
-
-const PlatformTag = styled.View`
-  background-color: #2563EB;
-  border-radius: 4px;
-  padding: 4px 8px;
-  margin-right: 8px;
-`;
-
-const PlatformText = styled.Text`
-  color: #FFFFFF;
-  font-size: 12px;
-`;
-
-const TagContainer = styled.View`
-  flex-direction: row;
-  margin-bottom: 8px;
-`;
+import {
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
+import { colors, commonStyles, spacing } from '../../styles/common';
 
 interface ContentItem {
   id: string;
@@ -101,6 +19,7 @@ interface ContentItem {
 }
 
 export default function CalendarScreen() {
+  const router = useRouter();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [contentItems] = useState<ContentItem[]>([
     { id: '1', title: 'Weekly Tech Review', platform: 'YouTube', time: '2:00 PM' },
@@ -113,52 +32,209 @@ export default function CalendarScreen() {
     const today = new Date();
 
     return (
-      <WeekRow>
+      <View style={styles.weekRow}>
         {days.map((day, index) => (
-          <DayCell 
+          <TouchableOpacity 
             key={day}
-            isSelected={selectedDate.getDay() === index}
+            style={[
+              styles.dayCell,
+              selectedDate.getDay() === index && styles.selectedDay
+            ]}
             onPress={() => {
               const newDate = new Date();
               newDate.setDate(today.getDate() - today.getDay() + index);
               setSelectedDate(newDate);
             }}
           >
-            <DayText isToday={today.getDay() === index}>{day}</DayText>
-          </DayCell>
+            <Text style={[
+              styles.dayText,
+              today.getDay() === index && styles.todayText
+            ]}>
+              {day}
+            </Text>
+          </TouchableOpacity>
         ))}
-      </WeekRow>
+      </View>
     );
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <Container>
-        <Title>Content Calendar</Title>
+    <SafeAreaView style={[commonStyles.container, { backgroundColor: colors.gray[50] }]}>
+      {/* Navigation Header */}
+      <View style={styles.navHeader}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.navTitle}>Calendar</Text>
+        <View style={styles.placeholder} />
+      </View>
 
-        <CalendarGrid>
-          {renderWeek()}
-        </CalendarGrid>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <Text style={styles.subtitle}>Plan and schedule your content</Text>
 
-        <View>
-          {contentItems.map(item => (
-            <ContentCard key={item.id}>
-              <TagContainer>
-                <PlatformTag>
-                  <PlatformText>{item.platform}</PlatformText>
-                </PlatformTag>
-              </TagContainer>
-              <ContentTitle>{item.title}</ContentTitle>
-              <ContentDetails>{item.time}</ContentDetails>
-            </ContentCard>
-          ))}
+          <View style={styles.calendarSection}>
+            <Text style={styles.sectionTitle}>This Week</Text>
+            <View style={styles.calendarGrid}>
+              {renderWeek()}
+            </View>
+          </View>
+
+          <View style={styles.contentSection}>
+            <Text style={styles.sectionTitle}>Scheduled Content</Text>
+            {contentItems.map(item => (
+              <View key={item.id} style={styles.contentCard}>
+                <View style={styles.contentHeader}>
+                  <View style={styles.platformTag}>
+                    <Text style={styles.platformText}>{item.platform}</Text>
+                  </View>
+                  <Text style={styles.contentTime}>{item.time}</Text>
+                </View>
+                <Text style={styles.contentTitle}>{item.title}</Text>
+              </View>
+            ))}
+          </View>
+
+          <TouchableOpacity style={[commonStyles.button, commonStyles.buttonPrimary, styles.addButton]}>
+            <Ionicons name="add" size={20} color="#FFFFFF" />
+            <Text style={commonStyles.buttonText}>Schedule Content</Text>
+          </TouchableOpacity>
         </View>
-
-        <AddButton>
-          <Ionicons name="add" size={24} color="#E4E4E7" />
-          <AddButtonText>Schedule Content</AddButtonText>
-        </AddButton>
-      </Container>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
-} 
+}
+
+const styles = StyleSheet.create({
+  navHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray[200],
+  },
+  backButton: {
+    padding: spacing.sm,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: colors.gray[700],
+    fontWeight: '500',
+  },
+  navTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.gray[800],
+  },
+  placeholder: {
+    width: 24,
+    height: 24,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  container: {
+    padding: spacing.lg,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.gray[600],
+    marginBottom: spacing.xl,
+    lineHeight: 22,
+  },
+  calendarSection: {
+    marginBottom: spacing.xl,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: colors.gray[800],
+    marginBottom: spacing.md,
+  },
+  calendarGrid: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: spacing.lg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  weekRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  dayCell: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectedDay: {
+    backgroundColor: colors.primary,
+  },
+  dayText: {
+    color: colors.gray[600],
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  todayText: {
+    color: colors.success,
+    fontWeight: '600',
+  },
+  contentSection: {
+    marginBottom: spacing.xl,
+  },
+  contentCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+  },
+  platformTag: {
+    backgroundColor: colors.primary,
+    borderRadius: 6,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  platformText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  contentTime: {
+    fontSize: 14,
+    color: colors.gray[500],
+    fontWeight: '500',
+  },
+  contentTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.gray[800],
+    lineHeight: 22,
+  },
+  addButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+}); 

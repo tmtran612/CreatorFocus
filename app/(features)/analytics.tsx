@@ -1,151 +1,230 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
-import { ScrollView } from 'react-native';
-import styled from 'styled-components/native';
-
-const Container = styled.View`
-  flex: 1;
-  background-color: #18181B;
-  padding: 24px;
-`;
-
-const Title = styled.Text`
-  font-size: 32px;
-  color: #E4E4E7;
-  margin-bottom: 24px;
-`;
-
-const StatGrid = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin: 0 -8px;
-  margin-bottom: 32px;
-`;
-
-const StatCard = styled.View`
-  background-color: rgba(39, 39, 42, 0.8);
-  border-radius: 12px;
-  padding: 20px;
-  margin: 8px;
-  border-width: 1px;
-  border-color: rgba(63, 63, 70, 0.5);
-  width: 45%;
-`;
-
-const StatValue = styled.Text`
-  color: #E4E4E7;
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 8px;
-`;
-
-const StatLabel = styled.Text`
-  color: #A1A1AA;
-  font-size: 14px;
-`;
-
-const ChartCard = styled.View`
-  background-color: rgba(39, 39, 42, 0.8);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
-  border-width: 1px;
-  border-color: rgba(63, 63, 70, 0.5);
-`;
-
-const ChartTitle = styled.Text`
-  color: #E4E4E7;
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 16px;
-`;
-
-const ChartPlaceholder = styled.View`
-  height: 200px;
-  background-color: rgba(63, 63, 70, 0.3);
-  border-radius: 8px;
-  justify-content: center;
-  align-items: center;
-`;
-
-const PlaceholderText = styled.Text`
-  color: #A1A1AA;
-  font-size: 14px;
-`;
-
-const MetricRow = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom-width: 1px;
-  border-bottom-color: rgba(63, 63, 70, 0.5);
-`;
-
-const MetricLabel = styled.Text`
-  color: #E4E4E7;
-  font-size: 16px;
-`;
-
-const MetricValue = styled.Text`
-  color: #10B981;
-  font-size: 16px;
-  font-weight: 600;
-`;
+import {
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
+import { colors, commonStyles, spacing } from '../../styles/common';
 
 export default function AnalyticsScreen() {
+  const router = useRouter();
+
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <Container>
-        <Title>Analytics Dashboard</Title>
+    <SafeAreaView style={[commonStyles.container, { backgroundColor: colors.gray[50] }]}>
+      {/* Navigation Header */}
+      <View style={styles.navHeader}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.navTitle}>Analytics</Text>
+        <View style={styles.placeholder} />
+      </View>
 
-        <StatGrid>
-          <StatCard>
-            <StatValue>1.2K</StatValue>
-            <StatLabel>Total Subscribers</StatLabel>
-          </StatCard>
-          <StatCard>
-            <StatValue>45</StatValue>
-            <StatLabel>Posts This Month</StatLabel>
-          </StatCard>
-          <StatCard>
-            <StatValue>89%</StatValue>
-            <StatLabel>Engagement Rate</StatLabel>
-          </StatCard>
-          <StatCard>
-            <StatValue>23K</StatValue>
-            <StatLabel>Total Views</StatLabel>
-          </StatCard>
-        </StatGrid>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <Text style={styles.subtitle}>Track your content performance</Text>
 
-        <ChartCard>
-          <ChartTitle>Growth Trends</ChartTitle>
-          <ChartPlaceholder>
-            <Ionicons name="stats-chart" size={32} color="#A1A1AA" />
-            <PlaceholderText>Chart visualization coming soon</PlaceholderText>
-          </ChartPlaceholder>
-        </ChartCard>
+          <View style={styles.statsSection}>
+            <Text style={styles.sectionTitle}>Overview</Text>
+            <View style={styles.statGrid}>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>1.2K</Text>
+                <Text style={styles.statLabel}>Total Subscribers</Text>
+              </View>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>45</Text>
+                <Text style={styles.statLabel}>Posts This Month</Text>
+              </View>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>89%</Text>
+                <Text style={styles.statLabel}>Engagement Rate</Text>
+              </View>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>23K</Text>
+                <Text style={styles.statLabel}>Total Views</Text>
+              </View>
+            </View>
+          </View>
 
-        <ChartCard>
-          <ChartTitle>Platform Performance</ChartTitle>
-          <MetricRow>
-            <MetricLabel>YouTube</MetricLabel>
-            <MetricValue>+12.5%</MetricValue>
-          </MetricRow>
-          <MetricRow>
-            <MetricLabel>Instagram</MetricLabel>
-            <MetricValue>+8.3%</MetricValue>
-          </MetricRow>
-          <MetricRow>
-            <MetricLabel>Twitter</MetricLabel>
-            <MetricValue>+15.7%</MetricValue>
-          </MetricRow>
-          <MetricRow style={{ borderBottomWidth: 0 }}>
-            <MetricLabel>LinkedIn</MetricLabel>
-            <MetricValue>+5.2%</MetricValue>
-          </MetricRow>
-        </ChartCard>
-      </Container>
-    </ScrollView>
+          <View style={styles.chartSection}>
+            <Text style={styles.sectionTitle}>Growth Trends</Text>
+            <View style={styles.chartCard}>
+              <View style={styles.chartPlaceholder}>
+                <Ionicons name="stats-chart" size={32} color={colors.gray[400]} />
+                <Text style={styles.placeholderText}>Chart visualization coming soon</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.platformSection}>
+            <Text style={styles.sectionTitle}>Platform Performance</Text>
+            <View style={styles.platformCard}>
+              <View style={styles.metricRow}>
+                <Text style={styles.metricLabel}>YouTube</Text>
+                <Text style={styles.metricValue}>+12.5%</Text>
+              </View>
+              <View style={styles.metricRow}>
+                <Text style={styles.metricLabel}>Instagram</Text>
+                <Text style={styles.metricValue}>+8.3%</Text>
+              </View>
+              <View style={styles.metricRow}>
+                <Text style={styles.metricLabel}>Twitter</Text>
+                <Text style={styles.metricValue}>+15.7%</Text>
+              </View>
+              <View style={[styles.metricRow, styles.lastMetricRow]}>
+                <Text style={styles.metricLabel}>LinkedIn</Text>
+                <Text style={styles.metricValue}>+5.2%</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
-} 
+}
+
+const styles = StyleSheet.create({
+  navHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray[200],
+  },
+  backButton: {
+    padding: spacing.sm,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: colors.gray[700],
+    fontWeight: '500',
+  },
+  navTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.gray[800],
+  },
+  placeholder: {
+    width: 24,
+    height: 24,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  container: {
+    padding: spacing.lg,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.gray[600],
+    marginBottom: spacing.xl,
+    lineHeight: 22,
+  },
+  statsSection: {
+    marginBottom: spacing.xl,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: colors.gray[800],
+    marginBottom: spacing.md,
+  },
+  statGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -spacing.sm,
+  },
+  statCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: spacing.lg,
+    margin: spacing.sm,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    width: '45%',
+  },
+  statValue: {
+    color: colors.primary,
+    fontSize: 28,
+    fontWeight: '700',
+    marginBottom: spacing.sm,
+  },
+  statLabel: {
+    color: colors.gray[600],
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  chartSection: {
+    marginBottom: spacing.xl,
+  },
+  chartCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: spacing.lg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  chartPlaceholder: {
+    height: 200,
+    backgroundColor: colors.gray[100],
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholderText: {
+    color: colors.gray[500],
+    fontSize: 14,
+    marginTop: spacing.sm,
+  },
+  platformSection: {
+    marginBottom: spacing.xl,
+  },
+  platformCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: spacing.lg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  metricRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray[200],
+  },
+  lastMetricRow: {
+    borderBottomWidth: 0,
+  },
+  metricLabel: {
+    color: colors.gray[800],
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  metricValue: {
+    color: colors.success,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+}); 

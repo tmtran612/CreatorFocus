@@ -22,21 +22,22 @@ app.use(bodyParser.json());
 // GET all tasks
 app.get('/api/tasks', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM tasks ORDER BY id DESC');
+    const result = await pool.query('SELECT id, title, description, priority, category FROM tasks ORDER BY id DESC');
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching tasks:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Database error' });
   }
 });
 
 // POST a new task
 app.post('/api/tasks', async (req, res) => {
-  const { title, description } = req.body;
+  console.log('Received body:', req.body); // Debug log
+  const { title, description, priority = 'Medium', category = 'General' } = req.body;
   try {
     await pool.query(
-      'INSERT INTO tasks (title, description) VALUES ($1, $2)',
-      [title, description]
+      'INSERT INTO tasks (title, description, priority, category) VALUES ($1, $2, $3, $4)',
+      [title, description, priority, category]
     );
     res.status(201).json({ success: true });
   } catch (error) {

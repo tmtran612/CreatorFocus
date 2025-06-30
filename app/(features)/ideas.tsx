@@ -1,108 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView } from 'react-native';
-import styled from 'styled-components/native';
-
-const Container = styled.View`
-  flex: 1;
-  background-color: #18181B;
-  padding: 24px;
-`;
-
-const Title = styled.Text`
-  font-size: 32px;
-  color: #E4E4E7;
-  margin-bottom: 24px;
-`;
-
-const Input = styled.TextInput`
-  background-color: rgba(24, 24, 27, 0.8);
-  border-radius: 8px;
-  padding: 12px;
-  color: #E4E4E7;
-  margin-bottom: 16px;
-  border-width: 1px;
-  border-color: rgba(63, 63, 70, 0.5);
-  height: 100px;
-  text-align-vertical: top;
-`;
-
-const GenerateButton = styled.TouchableOpacity`
-  background-color: #2563EB;
-  border-radius: 8px;
-  padding: 16px;
-  align-items: center;
-  flex-direction: row;
-  justify-content: center;
-  margin-bottom: 32px;
-`;
-
-const ButtonText = styled.Text`
-  color: #FFFFFF;
-  font-size: 16px;
-  font-weight: 600;
-  margin-left: 8px;
-`;
-
-const IdeaCard = styled.View`
-  background-color: rgba(39, 39, 42, 0.8);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
-  border-width: 1px;
-  border-color: rgba(63, 63, 70, 0.5);
-`;
-
-const IdeaTitle = styled.Text`
-  color: #E4E4E7;
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
-`;
-
-const IdeaDescription = styled.Text`
-  color: #A1A1AA;
-  font-size: 16px;
-  line-height: 24px;
-`;
-
-const TagContainer = styled.View`
-  flex-direction: row;
-  margin-bottom: 12px;
-`;
-
-const Tag = styled.View`
-  background-color: rgba(37, 99, 235, 0.2);
-  border-radius: 4px;
-  padding: 4px 8px;
-  margin-right: 8px;
-`;
-
-const TagText = styled.Text`
-  color: #60A5FA;
-  font-size: 12px;
-`;
-
-const ActionBar = styled.View`
-  flex-direction: row;
-  justify-content: flex-end;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top-width: 1px;
-  border-top-color: rgba(63, 63, 70, 0.5);
-`;
-
-const ActionButton = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-  margin-left: 16px;
-`;
-
-const ActionText = styled.Text`
-  color: #A1A1AA;
-  font-size: 14px;
-  margin-left: 4px;
-`;
+import {
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
+import { colors, commonStyles, spacing } from '../../styles/common';
 
 interface Idea {
   id: string;
@@ -112,6 +20,7 @@ interface Idea {
 }
 
 export default function IdeasScreen() {
+  const router = useRouter();
   const [prompt, setPrompt] = useState('');
   const [ideas] = useState<Idea[]>([
     {
@@ -134,51 +43,204 @@ export default function IdeasScreen() {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <Container>
-        <Title>AI Idea Generator</Title>
+    <SafeAreaView style={[commonStyles.container, { backgroundColor: colors.gray[50] }]}>
+      {/* Navigation Header */}
+      <View style={styles.navHeader}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.navTitle}>AI Ideas</Text>
+        <View style={styles.placeholder} />
+      </View>
 
-        <Input
-          value={prompt}
-          onChangeText={setPrompt}
-          placeholder="Describe your content niche and preferences..."
-          placeholderTextColor="#71717A"
-          multiline
-        />
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <Text style={styles.subtitle}>Get inspired with AI-powered content ideas</Text>
 
-        <GenerateButton onPress={generateIdeas}>
-          <Ionicons name="bulb-outline" size={24} color="#FFFFFF" />
-          <ButtonText>Generate Ideas</ButtonText>
-        </GenerateButton>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Describe your content niche and preferences</Text>
+            <TextInput
+              style={[commonStyles.input, styles.textArea]}
+              value={prompt}
+              onChangeText={setPrompt}
+              placeholder="e.g., Tech tutorials for beginners, lifestyle content for young professionals..."
+              placeholderTextColor={colors.gray[400]}
+              multiline
+              numberOfLines={4}
+              textAlignVertical="top"
+            />
+          </View>
 
-        {ideas.map(idea => (
-          <IdeaCard key={idea.id}>
-            <TagContainer>
-              {idea.tags.map(tag => (
-                <Tag key={tag}>
-                  <TagText>{tag}</TagText>
-                </Tag>
-              ))}
-            </TagContainer>
-            <IdeaTitle>{idea.title}</IdeaTitle>
-            <IdeaDescription>{idea.description}</IdeaDescription>
-            <ActionBar>
-              <ActionButton>
-                <Ionicons name="create-outline" size={20} color="#A1A1AA" />
-                <ActionText>Edit</ActionText>
-              </ActionButton>
-              <ActionButton>
-                <Ionicons name="bookmark-outline" size={20} color="#A1A1AA" />
-                <ActionText>Save</ActionText>
-              </ActionButton>
-              <ActionButton>
-                <Ionicons name="share-outline" size={20} color="#A1A1AA" />
-                <ActionText>Share</ActionText>
-              </ActionButton>
-            </ActionBar>
-          </IdeaCard>
-        ))}
-      </Container>
-    </ScrollView>
+          <TouchableOpacity
+            style={[commonStyles.button, commonStyles.buttonPrimary, styles.generateButton]}
+            onPress={generateIdeas}
+          >
+            <Ionicons name="bulb-outline" size={20} color="#FFFFFF" />
+            <Text style={commonStyles.buttonText}>Generate Ideas</Text>
+          </TouchableOpacity>
+
+          <View style={styles.ideasSection}>
+            <Text style={styles.sectionTitle}>Recent Ideas</Text>
+            {ideas.map(idea => (
+              <View key={idea.id} style={styles.ideaCard}>
+                <View style={styles.tagContainer}>
+                  {idea.tags.map(tag => (
+                    <View key={tag} style={styles.tag}>
+                      <Text style={styles.tagText}>{tag}</Text>
+                    </View>
+                  ))}
+                </View>
+                <Text style={styles.ideaTitle}>{idea.title}</Text>
+                <Text style={styles.ideaDescription}>{idea.description}</Text>
+                <View style={styles.actionBar}>
+                  <TouchableOpacity style={styles.actionButton}>
+                    <Ionicons name="create-outline" size={16} color={colors.gray[500]} />
+                    <Text style={styles.actionText}>Edit</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.actionButton}>
+                    <Ionicons name="bookmark-outline" size={16} color={colors.gray[500]} />
+                    <Text style={styles.actionText}>Save</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.actionButton}>
+                    <Ionicons name="share-outline" size={16} color={colors.gray[500]} />
+                    <Text style={styles.actionText}>Share</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
-} 
+}
+
+const styles = StyleSheet.create({
+  navHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray[200],
+  },
+  backButton: {
+    padding: spacing.sm,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: colors.gray[700],
+    fontWeight: '500',
+  },
+  navTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.gray[800],
+  },
+  placeholder: {
+    width: 24,
+    height: 24,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  container: {
+    padding: spacing.lg,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.gray[600],
+    marginBottom: spacing.xl,
+    lineHeight: 22,
+  },
+  inputContainer: {
+    marginBottom: spacing.lg,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.gray[700],
+    marginBottom: spacing.sm,
+  },
+  textArea: {
+    height: 100,
+    paddingTop: spacing.sm,
+  },
+  generateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.xl,
+  },
+  ideasSection: {
+    marginTop: spacing.lg,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: colors.gray[800],
+    marginBottom: spacing.md,
+  },
+  ideaCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  tagContainer: {
+    flexDirection: 'row',
+    marginBottom: spacing.sm,
+  },
+  tag: {
+    backgroundColor: colors.primary + '20',
+    borderRadius: 6,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    marginRight: spacing.sm,
+  },
+  tagText: {
+    color: colors.primary,
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  ideaTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.gray[800],
+    marginBottom: spacing.sm,
+    lineHeight: 24,
+  },
+  ideaDescription: {
+    fontSize: 14,
+    color: colors.gray[600],
+    lineHeight: 20,
+    marginBottom: spacing.md,
+  },
+  actionBar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingTop: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray[200],
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: spacing.md,
+  },
+  actionText: {
+    color: colors.gray[500],
+    fontSize: 14,
+    marginLeft: spacing.xs,
+  },
+}); 
